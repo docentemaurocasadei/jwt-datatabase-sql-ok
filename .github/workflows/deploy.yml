@@ -22,6 +22,13 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts
 
+      - name: Debug VPS_APP_PATH
+        env:
+          VPS_APP_PATH: ${{ secrets.VPS_APP_PATH }}
+        run: |
+          echo "Lunghezza: ${#VPS_APP_PATH}"
+          echo -n "$VPS_APP_PATH" | xxd
+
       - name: Deploy sulla VPS
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
