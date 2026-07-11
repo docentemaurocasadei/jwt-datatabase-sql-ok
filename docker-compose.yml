@@ -14,7 +14,7 @@ services:
     networks:
       - net_jds_ok
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-P", "3306", "-uroot", "-proot"]
       interval: 5s
       timeout: 5s
       retries: 20
