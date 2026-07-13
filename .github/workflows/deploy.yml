@@ -45,6 +45,7 @@ jobs:
             git fetch origin;
             git reset --hard origin/main;
             docker rm -f db_jds_ok 2>/dev/null || true;
+            chmod +x scripts/backup-jds.sh
             docker compose up -d --build --remove-orphans;
             docker compose ps;
             docker image prune -f;"
