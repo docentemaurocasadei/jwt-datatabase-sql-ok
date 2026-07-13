@@ -1,17 +1,17 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-CONTAINER="db_jds_ok"
-VOLUME="jwt-datatabase-sql-ok_voldb_jds_ok"
+PROJECT_DIR="/opt/jwt-database-sql-ok/"
+VOLUME="jwt-database-sql-ok_voldb_jds_ok"
 DIR="/backups/files/jds"
 DATE="$(date +%Y%m%d_%H%M%S)"
 
+cd "$PROJECT_DIR"
 mkdir -p "$DIR"
 
-docker stop "$CONTAINER"
+docker compose stop db
 
-# Riavvia MySQL anche se il backup fallisce
-trap 'docker start "$CONTAINER" >/dev/null 2>&1 || true' EXIT
+trap 'docker compose start db >/dev/null 2>&1 || true' EXIT
 
 docker run --rm \
   -v "$VOLUME:/data:ro" \
@@ -19,7 +19,7 @@ docker run --rm \
   alpine \
   tar -czf "/backup/volume_$DATE.tar.gz" -C /data .
 
-docker start "$CONTAINER"
+docker compose start db
 trap - EXIT
 
 find "$DIR" \
