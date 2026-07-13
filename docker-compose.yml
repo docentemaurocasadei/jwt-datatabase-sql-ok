@@ -35,6 +35,8 @@ services:
 
 volumes:
   voldb_jds_ok:
+    external: true
+    name: jwt-database-sql-ok_voldb_jds_ok
 
 networks:
   net_jds_ok:
