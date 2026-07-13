@@ -1,7 +1,6 @@
 services:
   db:
     image: mysql:8.4
-    container_name: db_jds_ok
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -23,7 +22,6 @@ services:
 
   app:
     build: .
-    container_name: app_jds_ok
     restart: unless-stopped
     ports:
       - "3000:3000"
