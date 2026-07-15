@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Connection, createConnection } from 'mysql2/promise';
-import { connect } from 'rxjs/internal/operators/connect';
+import { Pool, createPool } from 'mysql2/promise';
 @Injectable()
 export class DatabaseService {
-    private connection!: Connection;
+    private pool!: Pool;
 
     constructor(private configService: ConfigService) {
     }
@@ -12,7 +11,7 @@ export class DatabaseService {
         await this.connect();
     }
     async connect() {
-        this.connection = await createConnection({
+        this.pool = createPool({
             host: this.configService.get<string>('DB_HOST'),
             user: this.configService.get<string>('DB_USER'),
             password: this.configService.get<string>('DB_PASSWORD'),
@@ -20,20 +19,16 @@ export class DatabaseService {
         });
     }
 
-    getConnection(): Connection {
-        return this.connection;
-    }
-
     async disconnect() {
-        if (this.connection) {
-            await this.connection.end();
+        if (this.pool) {
+            await this.pool.end();
         }
     }
     async query(sql: string, params?: any[]): Promise<any> {
-        if (!this.connection) {
+        if (!this.pool) {
             throw new Error('Database connection is not established.');
         }
-        const [results] = await this.connection.execute(sql, params);
+        const [results] = await this.pool.execute(sql, params);
         return results;
     }
 }
